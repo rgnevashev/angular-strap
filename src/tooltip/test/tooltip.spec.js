@@ -127,7 +127,7 @@ describe('tooltip', function() {
       element: '<a data-placement="auto top-left" bs-tooltip="tooltip" data-viewport="null">hover me</a>'
     },
     'options-placement-auto-exotic-top-right': {
-      element: '<a data-placement="auto top-right" bs-tooltip="tooltip"data-viewport="null" >hover me</a>'
+      element: '<a data-placement="auto top-right" bs-tooltip="tooltip" data-viewport="null">hover me</a>'
     },
     'options-placement-auto-exotic-bottom-left': {
       element: '<a data-placement="auto bottom-left" bs-tooltip="tooltip" data-viewport="null">hover me</a>'
@@ -156,6 +156,9 @@ describe('tooltip', function() {
     'options-trigger': {
       element: '<a data-trigger="click" bs-tooltip="tooltip">click me</a>'
     },
+    'options-trigger-contextmenu': {
+      element: '<a data-trigger="contextmenu" bs-tooltip="tooltip">right-click me</a>'
+    },
     'options-html': {
       scope: {tooltip: {title: 'title<br>next'}},
       element: '<a data-html="{{html}}" bs-tooltip="tooltip">hover me</a>'
@@ -167,9 +170,9 @@ describe('tooltip', function() {
       scope: {tooltip: {title: 'Hello Tooltip!', counter: 0}, items: ['foo', 'bar', 'baz']},
       element: '<a title="{{tooltip.title}}" data-template-url="custom" bs-tooltip>hover me</a>'
     },
-    'options-contentTemplate': {
+    'options-titleTemplate': {
       scope: {tooltip: {title: 'Hello Tooltip!', counter: 0}, items: ['foo', 'bar', 'baz']},
-      element: '<a title="{{tooltip.title}}" data-content-template="custom" bs-tooltip>hover me</a>'
+      element: '<a title="{{tooltip.title}}" data-title-template="custom" bs-tooltip>hover me</a>'
     },
     'bsShow-attr': {
       scope: {tooltip: {title: 'Hello Tooltip!'}},
@@ -809,7 +812,6 @@ describe('tooltip', function() {
     });
 
     describe('trigger', function() {
-
       it('should support an alternative trigger', function() {
         var elm = compileDirective('options-trigger');
         expect(sandboxEl.children('.tooltip').length).toBe(0);
@@ -819,6 +821,14 @@ describe('tooltip', function() {
         expect(sandboxEl.children('.tooltip').length).toBe(0);
       });
 
+      it('should support a contextmenu trigger', function() {
+        var elm = compileDirective('options-trigger-contextmenu');
+        expect(sandboxEl.children('.tooltip').length).toBe(0);
+        angular.element(elm[0]).triggerHandler('contextmenu');
+        expect(sandboxEl.children('.tooltip').length).toBe(1);
+        angular.element(elm[0]).triggerHandler('contextmenu');
+        expect(sandboxEl.children('.tooltip').length).toBe(0);
+      });
     });
 
     describe('html', function() {
@@ -903,11 +913,11 @@ describe('tooltip', function() {
 
     });
 
-    describe('contentTemplate', function() {
+    describe('titleTemplate', function() {
 
-      it('should support custom contentTemplate', function() {
+      it('should support custom titleTemplate', function() {
         $templateCache.put('custom', 'foo: {{title}}');
-        var elm = compileDirective('options-contentTemplate');
+        var elm = compileDirective('options-titleTemplate');
         angular.element(elm[0]).triggerHandler('mouseenter');
          expect(sandboxEl.find('.tooltip-inner').text()).toBe('foo: ' + scope.tooltip.title);
       });
